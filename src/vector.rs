@@ -1,11 +1,11 @@
 use super::Numeric;
+use std::ops::{Add, Sub, Mul, Div, Rem};
 
 pub trait Vector<N>: Sized where N: Numeric {
     #[cfg(features = "unstable")]
     fn is_perpendicular_to<M>(self, v_prime: Self) -> bool
     where Self: Mul<Self, Output=M>
         , M: PartialEq
-        , M: Zero
     {
         (self * v_prime) == M::zero()
     }

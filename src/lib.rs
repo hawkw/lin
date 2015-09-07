@@ -11,6 +11,16 @@ use std::ops::{Add, Sub, Mul, Div, Rem};
 #[cfg(features = "unstable")]
 use std::num::Zero;
 
+#[cfg(features = "unstable")]
+pub trait Numeric: PartialEq + PartialOrd
+                             + Add<Self>
+                             + Sub<Self>
+                             + Mul<Self>
+                             + Div<Self>
+                             + Rem<Self>
+                             + Zero
+                             + Sized {}
+#[cfg(not(features = "unstable"))]
 pub trait Numeric: PartialEq + PartialOrd
                              + Add<Self>
                              + Sub<Self>
