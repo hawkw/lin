@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub, Mul, Div, Rem, Neg};
+use std::ops::{Add, Sub, Mul, Div, Rem};
 
 pub trait Numeric: PartialEq + PartialOrd
                              + Add<Self>
@@ -8,17 +8,21 @@ pub trait Numeric: PartialEq + PartialOrd
                              + Rem<Self>
                              + Sized {}
 
-macro_rules! is_numeric {
+macro_rules! make_numeric {
     ($($t:ty)*) => { $(impl Numeric for $t {})* };
 }
 
-is_numeric!(u8 u16 u32 u64 usize i8 i16 i32 i64 isize f32 f64);
+make_numeric!(u8 u16 u32 u64 usize i8 i16 i32 i64 isize f32 f64);
 
 pub trait Vector<N> where N: Numeric {
     fn dot_product(&self, other: Self) -> N;
 }
 
+
 #[cfg(not(simd))]
+/// A 3D vector of any numeric type.
+///
+/// This is the non-SIMD version.
 #[derive(Clone, Copy, PartialEq, PartialOrd, Debug)]
 pub struct Vector3<N>
 where N: Numeric
@@ -70,6 +74,9 @@ impl_v3_ops!{
 }
 
 #[cfg(not(simd))]
+/// A 2D vector of any numeric type.
+///
+/// This is the non-SIMD version.
 #[derive(Clone, Copy, PartialEq, PartialOrd, Debug)]
 pub struct Vector2<N>
 where N: Numeric
