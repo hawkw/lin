@@ -10,9 +10,9 @@ readme = "README.md"
 keywords = ["math","linear","vector"]
 
 [features]
-# default = ["simd"]
+default = ["simd"]
 unstable = []
 
-# [dependencies.simd]
-# git = "https://github.com/huonw/simd"
-# optional = true
+[dependencies.simd]
+git = "https://github.com/huonw/simd"
+optional = true
