@@ -1,4 +1,6 @@
 use std::ops::{Add, Sub, Mul, Div, Rem};
+#[cfg(features = "unstable")]
+use std::num::Zero;
 
 pub trait Numeric: PartialEq + PartialOrd
                              + Add<Self>
@@ -14,8 +16,15 @@ macro_rules! make_numeric {
 
 make_numeric!(u8 u16 u32 u64 usize i8 i16 i32 i64 isize f32 f64);
 
-pub trait Vector<N> where N: Numeric {
-    fn dot_product(&self, other: Self) -> N;
+pub trait Vector<N>: Sized where N: Numeric {
+    #[cfg(features = "unstable")]
+    fn is_perpendicular_to<M>(self, v_prime: Self) -> bool
+    where Self: Mul<Self, Output=M>
+        , M: PartialEq
+        , M: Zero
+    {
+        (self * v_prime) == M::zero()
+    }
 }
 
 
@@ -69,8 +78,34 @@ impl_v3_ops!{
     Add, add, +
     Sub, sub, -
     Div, div, /
-    Mul, mul, *
     Rem, rem, %
+}
+
+impl<N> Mul<N> for Vector3<N>
+where N: Numeric + Mul<Output = N>
+    , N: Copy
+{
+    type Output = Self;
+    fn mul(self, rhs: N) -> Self {
+        Vector3 { x: self.x * rhs
+                , y: self.y * rhs
+                , z: self.z * rhs
+                }
+    }
+
+}
+
+impl<N> Mul<Vector3<N>> for Vector3<N>
+where N: Numeric
+    , N: Mul<Output = N> + Add<Output = N>
+    , N: Copy
+{
+    type Output = N;
+    fn mul(self, rhs: Self) -> N {
+        (self.x * rhs.x) +
+        (self.y * rhs.y) +
+        (self.z * rhs.z)
+    }
 }
 
 #[cfg(not(simd))]
@@ -121,6 +156,28 @@ impl_v2_ops!{
     Add, add, +
     Sub, sub, -
     Div, div, /
-    Mul, mul, *
     Rem, rem, %
+}
+
+impl<N> Mul<N> for Vector2<N>
+where N: Numeric + Mul<Output = N>
+    , N: Copy
+{
+    type Output = Self;
+    fn mul(self, rhs: N) -> Self {
+        Vector2 { x: self.x * rhs
+                , y: self.y * rhs
+                }
+    }
+}
+
+impl<N> Mul<Vector2<N>> for Vector2<N>
+where N: Numeric
+    , N: Mul<Output = N> + Add<Output = N>
+    , N: Copy
+{
+    type Output = N;
+    fn mul(self, rhs: Self) -> N {
+        (self.x * rhs.x) + (self.y * rhs.y)
+    }
 }
