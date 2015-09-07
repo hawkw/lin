@@ -1,41 +1,33 @@
 sudo: false
 language: rust
-# build only against nightly Rust
 rust:
-  - nightly
-  - stable
-  - beta
-
+- nightly
+- stable
+- beta
 addons:
   apt:
     packages:
-    # Necessary for travis-cargo coverage reporting
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-
+    - libcurl4-openssl-dev
+    - libelf-dev
+    - libdw-dev
 before_script:
-  # install travis-cargo script
-  - |
-      pip install 'travis-cargo<0.2' --user &&
-      export PATH=$HOME/.local/bin:$PATH
-
+- |
+  pip install 'travis-cargo<0.2' --user &&
+  export PATH=$HOME/.local/bin:$PATH
 script:
-  - travis-cargo build
-  # tests
-  - travis-cargo test
-  # run benchmarks (pending)
-  - travis-cargo bench
-
+- travis-cargo build
+- travis-cargo test
+- travis-cargo bench
 after_success:
-  # report test coverage to coveralls.io
-  - travis-cargo coveralls --no-sudo
-  # report coverage to codecov.io
-  - bash <(curl https://codecov.io/bash)
-
-# triggers only on deploy (tagged commit)
+- travis-cargo coveralls --no-sudo
+- bash <(curl https://codecov.io/bash)
 before_deploy:
-  # generate and upload Rustdoc to GitHub pages
-  - travis-cargo doc && travis-cargo doc-upload
-  # Build the release (optimized) binary
-  - travis-cargo build -- --release
+- travis-cargo doc && travis-cargo doc-upload
+- travis-cargo build -- --release
+deploy:
+  provider: releases
+  api_key:
+    secure: cl95Vq3ZjOXJyhidhmpb788xajQnnA8czJouKEAb6MQKVvR4ikwY4+pe0TFgLwuMIFDFviUgkgRbQ7wLX2FP/LMilBpRN+IFfb49wRvR547gDe2yjqqocudzh6KdDMhubjg/jSVC5VzAnX8fEkOckezZl/+352gFtIasPzFDQEo+5Z3Ny4Wa9Xwu38W/en7A5jU3Z4rxvh71mlRd+BAvzkP6aqFYfmQTL9cS2Juo5roi+odg1hCsosXsJu/uhewYSYXMkHguSjho1Ulm9Sz5fL5R9yhKaxzm5jnWFt5PetaBjSyDcuVSYwhWoupsStJLcb0+e9bgj7vddEECOGMdKaJ2Mp1psr/3mzdFzoMvE70sPtA8V7urIwCgsy9UbR1EzMuFJayJDYwDPOMJYVsGn85gpZn32qY7osXlrczBd/xms+67AWJSceYYfh3HHjPxwYoj469Wg1VVgAS/co4Lgxq3AnWRDMTFVtZioRsE7SnBnjwzNppr6XLY0HfcgM+GJ2aCvBVmHRLd9hEA7KVbOEgYpOLSJj/NP8YOmXGm4T5LOuShN9Yv8+eojl7vHMHqfWt0YkMYsuBhnGIYaYqCetBUwcNyCNQ+PVj+NOixVcG3nslBZK1QGFlWn4W753h0FeYwFLc3F3AhdlCUgvohnAsGbOiQNJ1Q4GEnywu8tQc=
+  file: target/release/lin.rlib
+  on:
+    repo: hawkw/lin
