@@ -1,7 +1,13 @@
 [package]
 name = "lin"
-version = "0.1.0"
+version = "0.0.1"
 authors = ["Hawk Weisman <hi@hawkweisman.me>"]
+description = "Generic linear algebra (with SIMD)"
+license = "MIT"
+homepage = "http://hawkweisman.me/lin"
+repository = "https://github.com/hawkw/lin"
+readme = "README.md"
+keywords = ["math","linear","vector"]
 
 [features]
 # default = ["simd"]
