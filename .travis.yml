@@ -33,17 +33,10 @@ after_success:
   # report coverage to codecov.io
   - bash <(curl https://codecov.io/bash)
 
-# triggers only if we're doing a deploy (tagged version)
-# deploy triggers only on the nightly build
+
 before_deploy:
-  # build the rustdoc & upload to GitHub Pages
-  - travis-cargo doc && travis-cargo doc-upload
   # build the release executable (for GitHub Releases)
   - travis-cargo build -- --release
-  # package for crates.io deployment and publish
-  - |
-    travis-cargo package &&
-    travis-cargo publish -- --token $CRATES_TOKEN
 
 # deploy to GitHub Releases
 deploy:
@@ -52,9 +45,19 @@ deploy:
     secure: cl95Vq3ZjOXJyhidhmpb788xajQnnA8czJouKEAb6MQKVvR4ikwY4+pe0TFgLwuMIFDFviUgkgRbQ7wLX2FP/LMilBpRN+IFfb49wRvR547gDe2yjqqocudzh6KdDMhubjg/jSVC5VzAnX8fEkOckezZl/+352gFtIasPzFDQEo+5Z3Ny4Wa9Xwu38W/en7A5jU3Z4rxvh71mlRd+BAvzkP6aqFYfmQTL9cS2Juo5roi+odg1hCsosXsJu/uhewYSYXMkHguSjho1Ulm9Sz5fL5R9yhKaxzm5jnWFt5PetaBjSyDcuVSYwhWoupsStJLcb0+e9bgj7vddEECOGMdKaJ2Mp1psr/3mzdFzoMvE70sPtA8V7urIwCgsy9UbR1EzMuFJayJDYwDPOMJYVsGn85gpZn32qY7osXlrczBd/xms+67AWJSceYYfh3HHjPxwYoj469Wg1VVgAS/co4Lgxq3AnWRDMTFVtZioRsE7SnBnjwzNppr6XLY0HfcgM+GJ2aCvBVmHRLd9hEA7KVbOEgYpOLSJj/NP8YOmXGm4T5LOuShN9Yv8+eojl7vHMHqfWt0YkMYsuBhnGIYaYqCetBUwcNyCNQ+PVj+NOixVcG3nslBZK1QGFlWn4W753h0FeYwFLc3F3AhdlCUgvohnAsGbOiQNJ1Q4GEnywu8tQc=
   file: target/release/liblin.rlib
   on:
-    repo: hawkw/lin
     rust: nightly
+    repo: hawkw/lin
     tags: true
+    
+# triggers only if we're doing a deploy (tagged version)
+# deploy triggers only on the nightly build    
+after_deploy:
+  # build the rustdoc & upload to GitHub Pages
+  - travis-cargo doc && travis-cargo doc-upload
+  # package for crates.io deployment and publish
+  - |
+    travis-cargo package &&
+    travis-cargo publish -- --token $CRATES_TOKEN
 
 env:
   global:
