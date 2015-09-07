@@ -1,0 +1,41 @@
+sudo: false
+language: rust
+# build only against nightly Rust
+rust:
+  - nightly
+  - stable
+  - beta
+
+addons:
+  apt:
+    packages:
+    # Necessary for travis-cargo coverage reporting
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+
+before_script:
+  # install travis-cargo script
+  - |
+      pip install 'travis-cargo<0.2' --user &&
+      export PATH=$HOME/.local/bin:$PATH
+
+script:
+  - travis-cargo build
+  # tests
+  - travis-cargo test
+  # run benchmarks (pending)
+  - travis-cargo bench
+
+after_success:
+  # report test coverage to coveralls.io
+  - travis-cargo coveralls --no-sudo
+  # report coverage to codecov.io
+  - bash <(curl https://codecov.io/bash)
+
+# triggers only on deploy (tagged commit)
+before_deploy:
+  # generate and upload Rustdoc to GitHub pages
+  - travis-cargo doc && travis-cargo doc-upload
+  # Build the release (optimized) binary
+  - travis-cargo build -- --release
