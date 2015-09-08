@@ -121,7 +121,6 @@ where N: Numeric
 impl<N> Mul<N> for Vector3<N>
 where Self: Simdalize<Elem = N>
     , N: Numeric + Mul<Output = N>
-    , N: Copy
 {
     type Output = Self;
     fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
@@ -214,7 +213,6 @@ where N: Numeric + Mul<Output = N>
 impl<N> Mul<N> for Vector2<N>
 where Self: Simdalize<Elem = N>
     , N: Numeric + Mul<Output = N>
-    , N: Copy
 {
     type Output = Self;
     fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
