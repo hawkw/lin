@@ -28,7 +28,7 @@ macro_rules! e { ($e:expr) => { $e } }
 macro_rules! impl_v3_ops {
     ($($name:ident, $fun:ident, $op:tt)*) => {$(
         // implement the operation for vector & vector
-        #[cfg(not(simd))]
+        #[cfg(not(features = "parallel"))]
         impl<N> $name<Vector3<N>> for Vector3<N>
         where N: Numeric + $name<Output=N>
             , N: Copy
@@ -42,7 +42,7 @@ macro_rules! impl_v3_ops {
             }
         }
         // implement the operation for vector & scalar
-        #[cfg(not(simd))]
+        #[cfg(not(features = "parallel"))]
         impl<N> $name<N> for Vector3<N>
         where N: Numeric + $name<Output=N>
             , N: Copy
@@ -65,6 +65,7 @@ impl_v3_ops!{
     Rem, rem, %
 }
 
+#[cfg(not(features = "parallel"))]
 impl<N> Mul<N> for Vector3<N>
 where N: Numeric + Mul<Output = N>
     , N: Copy
@@ -79,6 +80,7 @@ where N: Numeric + Mul<Output = N>
 
 }
 
+#[cfg(not(features = "parallel"))]
 impl<N> Mul<Vector3<N>> for Vector3<N>
 where N: Numeric
     , N: Mul<Output = N> + Add<Output = N>
@@ -108,7 +110,7 @@ macro_rules! e { ($e:expr) => { $e } }
 macro_rules! impl_v2_ops {
     ($($name:ident, $fun:ident, $op:tt)*) => {$(
         // implement the operation for vector & vector
-        #[cfg(not(simd))]
+        #[cfg(not(features = "parallel"))]
         impl<N> $name<Vector2<N>> for Vector2<N>
         where N: Numeric + $name<Output=N>
             , N: Copy
@@ -121,7 +123,7 @@ macro_rules! impl_v2_ops {
             }
         }
         // implement the operation for vector & scalar
-        #[cfg(not(simd))]
+        #[cfg(not(features = "parallel"))]
         impl<N> $name<N> for Vector2<N>
         where N: Numeric + $name<Output=N>
             , N: Copy
@@ -143,6 +145,7 @@ impl_v2_ops!{
     Rem, rem, %
 }
 
+#[cfg(not(features = "parallel"))]
 impl<N> Mul<N> for Vector2<N>
 where N: Numeric + Mul<Output = N>
     , N: Copy
@@ -155,6 +158,8 @@ where N: Numeric + Mul<Output = N>
     }
 }
 
+
+#[cfg(not(features = "parallel"))]
 impl<N> Mul<Vector2<N>> for Vector2<N>
 where N: Numeric
     , N: Mul<Output = N> + Add<Output = N>

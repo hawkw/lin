@@ -10,7 +10,7 @@ readme = "README.md"
 keywords = ["math","linear","vector"]
 
 [features]
-default = ["simd"]
+parallel = ["simd"]
 unstable = []
 
 [dependencies.simd]
