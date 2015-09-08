@@ -11,7 +11,7 @@ keywords = ["math","linear","vector"]
 
 [features]
 parallel = ["simd"]
-unstable = []
+unstable = ["parallel"]
 
 [dependencies.simd]
 git = "https://github.com/huonw/simd"
