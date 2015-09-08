@@ -32,7 +32,6 @@ macro_rules! e { ($e:expr) => { $e } }
 macro_rules! impl_v3_ops {
     ($($name:ident, $fun:ident, $op:tt)*) => {$(
         // implement the operation for vector & vector
-        #[cfg(not(features = "parallel"))]
         impl<N> $name<Vector3<N>> for Vector3<N>
         where N: Numeric + $name<Output=N>
             , N: Copy
@@ -46,7 +45,6 @@ macro_rules! impl_v3_ops {
             }
         }
         // implement the operation for vector & scalar
-        #[cfg(not(features = "parallel"))]
         impl<N> $name<N> for Vector3<N>
         where N: Numeric + $name<Output=N>
             , N: Copy
@@ -57,6 +55,18 @@ macro_rules! impl_v3_ops {
                         , y: e!(self.y $op rhs)
                         , z: e!(self.z $op rhs)
                         }
+            }
+        }
+
+        #[cfg(features = "parallel")]
+        impl<N> $name<N> for Vector3<N>
+        where Self: Simdalize<Elem = N>
+            , N: Numeric + $name<Output = N>
+            , N: Copy
+        {
+            type Output = Self;
+            fn $fun(self, rhs: N) -> Output {
+                e!(self.simdalize() $op N::splat(rhs))
             }
         }
     )*};
@@ -122,7 +132,6 @@ macro_rules! e { ($e:expr) => { $e } }
 macro_rules! impl_v2_ops {
     ($($name:ident, $fun:ident, $op:tt)*) => {$(
         // implement the operation for vector & vector
-        #[cfg(not(features = "parallel"))]
         impl<N> $name<Vector2<N>> for Vector2<N>
         where N: Numeric + $name<Output=N>
             , N: Copy
@@ -135,7 +144,6 @@ macro_rules! impl_v2_ops {
             }
         }
         // implement the operation for vector & scalar
-        #[cfg(not(features = "parallel"))]
         impl<N> $name<N> for Vector2<N>
         where N: Numeric + $name<Output=N>
             , N: Copy
@@ -145,6 +153,18 @@ macro_rules! impl_v2_ops {
                 Vector2 { x: e!(self.x $op rhs)
                         , y: e!(self.y $op rhs)
                         }
+            }
+        }
+
+        #[cfg(features = "parallel")]
+        impl<N> $name<N> for Vector2<N>
+        where Self: Simdalize<Elem = N>
+            , N: Numeric + $name<Output = N>
+            , N: Copy
+        {
+            type Output = Self;
+            fn $fun(self, rhs: N) -> Output {
+                e!(self.simdalize() $op N::splat(rhs))
             }
         }
     )*};
