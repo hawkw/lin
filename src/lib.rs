@@ -7,6 +7,9 @@ extern crate simd;
 
 pub mod vector;
 
+#[cfg(features = "parallel")]
+mod parallel;
+
 use std::ops::{Add, Sub, Mul, Div, Rem};
 #[cfg(features = "unstable")]
 use std::num::Zero;
