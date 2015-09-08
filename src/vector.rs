@@ -209,15 +209,6 @@ where N: Numeric + Mul<Output = N>
     }
 }
 
-#[cfg(features = "parallel")]
-impl<N> Mul<N> for Vector2<N>
-where Self: Simdalize<Elem = N>
-    , N: Numeric + Mul<Output = N>
-{
-    type Output = Self;
-    fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
-}
-
 impl<N> Mul<Vector2<N>> for Vector2<N>
 where N: Numeric
     , N: Mul<Output = N> + Add<Output = N>
@@ -227,4 +218,13 @@ where N: Numeric
     fn mul(self, rhs: Self) -> N {
         (self.x * rhs.x) + (self.y * rhs.y)
     }
+}
+
+#[cfg(features = "parallel")]
+impl<N> Mul<N> for Vector2<N>
+where Self: Simdalize<Elem = N>
+    , N: Numeric + Mul<Output = N>
+{
+    type Output = Self;
+    fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
 }
