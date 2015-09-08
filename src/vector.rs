@@ -1,6 +1,9 @@
 use super::Numeric;
 use std::ops::{Add, Sub, Mul, Div, Rem};
 
+#[cfg(features = "parallel")]
+use super::parallel::*;
+
 pub trait Vector<N>: Sized where N: Numeric {
     #[cfg(features = "unstable")]
     fn is_perpendicular_to<M>(self, v_prime: Self) -> bool
@@ -23,6 +26,7 @@ where N: Numeric
               , pub y: N
               , pub z: N
               }
+
 macro_rules! e { ($e:expr) => { $e } }
 
 macro_rules! impl_v3_ops {
@@ -65,7 +69,6 @@ impl_v3_ops!{
     Rem, rem, %
 }
 
-#[cfg(not(features = "parallel"))]
 impl<N> Mul<N> for Vector3<N>
 where N: Numeric + Mul<Output = N>
     , N: Copy
@@ -80,7 +83,6 @@ where N: Numeric + Mul<Output = N>
 
 }
 
-#[cfg(not(features = "parallel"))]
 impl<N> Mul<Vector3<N>> for Vector3<N>
 where N: Numeric
     , N: Mul<Output = N> + Add<Output = N>
@@ -92,6 +94,16 @@ where N: Numeric
         (self.y * rhs.y) +
         (self.z * rhs.z)
     }
+}
+
+#[cfg(features = "parallel")]
+impl<N> Mul<N> for Vector3<N>
+where Self: Simdalize<Elem = N>
+    , N: Numeric + Mul<Output = N>
+    , N: Copy
+{
+    type Output = Self;
+    fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
 }
 
 #[cfg(not(simd))]
@@ -138,14 +150,12 @@ macro_rules! impl_v2_ops {
     )*};
 }
 
-impl_v2_ops!{
-    Add, add, +
-    Sub, sub, -
-    Div, div, /
-    Rem, rem, %
-}
+impl_v2_ops! { Add, add, +
+               Sub, sub, -
+               Div, div, /
+               Rem, rem, %
+             }
 
-#[cfg(not(features = "parallel"))]
 impl<N> Mul<N> for Vector2<N>
 where N: Numeric + Mul<Output = N>
     , N: Copy
@@ -158,8 +168,16 @@ where N: Numeric + Mul<Output = N>
     }
 }
 
+#[cfg(features = "parallel")]
+impl<N> Mul<N> for Vector2<N>
+where Self: Simdalize<Elem = N>
+    , N: Numeric + Mul<Output = N>
+    , N: Copy
+{
+    type Output = Self;
+    fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
+}
 
-#[cfg(not(features = "parallel"))]
 impl<N> Mul<Vector2<N>> for Vector2<N>
 where N: Numeric
     , N: Mul<Output = N> + Add<Output = N>

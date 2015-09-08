@@ -11,6 +11,7 @@ pub mod vector;
 mod parallel;
 
 use std::ops::{Add, Sub, Mul, Div, Rem};
+
 #[cfg(features = "unstable")]
 use std::num::Zero;
 
@@ -23,6 +24,7 @@ pub trait Numeric: PartialEq + PartialOrd
                              + Rem<Self>
                              + Zero
                              + Sized {}
+
 #[cfg(not(features = "unstable"))]
 pub trait Numeric: PartialEq + PartialOrd
                              + Add<Self>
