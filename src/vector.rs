@@ -69,6 +69,17 @@ macro_rules! impl_v3_ops {
                 e!(self.simdalize() $op N::splat(rhs))
             }
         }
+
+        #[cfg(features = "parallel")]
+        impl<N> $name<Vector3<N>> for Vector3<N>
+        where Self: Simdalize<Elem = N>
+            , N: Numeric + $name<Output = N>
+        {
+            type Output = Self;
+            fn $fun(self, rhs: Self) -> Output {
+                e!(self.simdalize() $op rhs.simdalize())
+            }
+        }
     )*};
 }
 
@@ -165,6 +176,17 @@ macro_rules! impl_v2_ops {
             type Output = Self;
             fn $fun(self, rhs: N) -> Output {
                 e!(self.simdalize() $op N::splat(rhs))
+            }
+        }
+
+        #[cfg(features = "parallel")]
+        impl<N> $name<Vector2<N>> for Vector2<N>
+        where Self: Simdalize<Elem = N>
+            , N: Numeric + $name<Output = N>
+        {
+            type Output = Self;
+            fn $fun(self, rhs: Self) -> Output {
+                e!(self.simdalize() $op rhs.simdalize())
             }
         }
     )*};
