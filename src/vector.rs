@@ -1,4 +1,4 @@
-use super::Numeric;
+use super::{Numeric, Columnar, Tabular};
 use std::ops::{Add, Sub, Mul, Div, Rem};
 
 #[cfg(features = "parallel")]
@@ -43,6 +43,41 @@ where N: Numeric
                 , z: N::rand(rng)
                 }
     }
+}
+
+impl<N> Columnar for Vector3<N> {
+    type Column = Vector3<N>;
+
+    #[inline] fn ncols(&self) -> usize { 1 }
+    #[inline] fn column(&self, i: usize) -> Self::Column {
+        if i == 0 { *self }
+        else { panic!("Index out of bounds!") }
+    }
+    #[inline] fn column_mut(&mut self, i: usize) -> &mut Self::Column {
+        if i == 0 { self }
+        else { panic!("Index out of bounds!") }
+    }
+
+}
+
+impl<N> Tabular for Vector3<N> {
+    type Row = N;
+    #[inline] fn nrows(&self) -> usize { 3 }
+    #[inline] fn row(&self, i: usize) -> Self::Row {
+        match i { 0 => self.x
+                , 1 => self.y
+                , 2 => self.z
+                , _ => panic!("Index out of bounds!")
+                }
+    }
+    #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
+        match i { 0 => &mut self.x
+                , 1 => &mut self.y
+                , 2 => &mut self.z
+                , _ => panic!("Index out of bounds!")
+                }
+    }
+
 }
 
 macro_rules! e { ($e:expr) => { $e } }
@@ -169,8 +204,40 @@ where N: Numeric
     }
 }
 
+impl<N> Columnar for Vector2<N> {
+    type Column = Vector2<N>;
 
-macro_rules! e { ($e:expr) => { $e } }
+    #[inline] fn ncols(&self) -> usize { 1 }
+    #[inline] fn column(&self, i: usize) -> Self::Column {
+        if i == 0 { *self }
+        else { panic!("Index out of bounds!") }
+    }
+    #[inline] fn column_mut(&mut self, i: usize) -> &mut Self::Column {
+        if i == 0 { self }
+        else { panic!("Index out of bounds!") }
+    }
+
+}
+
+impl<N> Tabular for Vector2<N> {
+    type Row = N;
+    #[inline] fn nrows(&self) -> usize { 3 }
+    #[inline] fn row(&self, i: usize) -> Self::Row {
+        match i { 0 => self.x
+                , 1 => self.y
+                , _ => panic!("Index out of bounds!")
+                }
+    }
+    #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
+        match i { 0 => &mut self.x
+                , 1 => &mut self.y
+                , _ => panic!("Index out of bounds!")
+                }
+    }
+
+}
+
+// macro_rules! e { ($e:expr) => { $e } }
 
 macro_rules! impl_v2_ops {
     ($($name:ident, $fun:ident, $op:tt)*) => {$(
