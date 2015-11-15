@@ -4,7 +4,9 @@ use std::ops::{Add, Sub, Mul, Div, Rem};
 #[cfg(features = "parallel")]
 use super::parallel::*;
 
-pub trait Vector<N>: Sized where N: Numeric {
+pub trait Vector<N>: Sized
+where N: Numeric {
+
     #[cfg(features = "unstable")]
     fn is_perpendicular_to<M>(self, v_prime: Self) -> bool
     where Self: Mul<Self, Output=M>
@@ -14,12 +16,12 @@ pub trait Vector<N>: Sized where N: Numeric {
     }
 }
 
-
-#[cfg(not(simd))]
 /// A 3D vector of any numeric type.
 ///
 /// This is the non-SIMD version.
-#[derive(Clone, Copy, PartialEq, PartialOrd, Debug)]
+#[cfg(not(simd))]
+#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
+#[repr(C)]
 pub struct Vector3<N>
 where N: Numeric
     , N: Copy { pub x: N
@@ -126,11 +128,13 @@ where Self: Simdalize<Elem = N>
     fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
 }
 
-#[cfg(not(simd))]
+
 /// A 2D vector of any numeric type.
 ///
 /// This is the non-SIMD version.
-#[derive(Clone, Copy, PartialEq, PartialOrd, Debug)]
+#[cfg(not(simd))]
+#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
+#[repr(C)]
 pub struct Vector2<N>
 where N: Numeric
     , N: Copy { pub x: N
