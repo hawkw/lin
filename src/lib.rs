@@ -1,9 +1,12 @@
 #![crate_name = "lin"]
 #![crate_type = "lib"]
 #![cfg_attr(features = "unstable", feature(zero_one))]
+#![cfg_attr(test, feature(plugin))]
+#![cfg_attr(test, plugin(quickcheck_macros))]
 
-#[cfg(features = "simd")]
-extern crate simd;
+#[cfg(test)] extern crate quickcheck;
+#[cfg(features = "simd")] extern crate simd;
+#[cfg(features = "rand")] extern crate rand;
 
 pub mod vector;
 

@@ -12,7 +12,16 @@ keywords = ["math","linear","vector"]
 [features]
 parallel = ["simd"]
 unstable = ["parallel"]
+random = ["rand"]
 
 [dependencies.simd]
 git = "https://github.com/huonw/simd"
 optional = true
+
+[dependencies.rand]
+version = "0.3"
+optional = true
+
+[dev-dependencies]
+quickcheck = "0.2"
+quickcheck_macros = "0.2"

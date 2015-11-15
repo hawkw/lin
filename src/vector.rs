@@ -4,6 +4,9 @@ use std::ops::{Add, Sub, Mul, Div, Rem};
 #[cfg(features = "parallel")]
 use super::parallel::*;
 
+#[cfg(features = "rand")]
+use rand::Rand;
+
 pub trait Vector<N>: Sized
 where N: Numeric {
 
@@ -28,6 +31,19 @@ where N: Numeric
               , pub y: N
               , pub z: N
               }
+
+#[cfg(features = "rand")]
+impl<N> Rand for Vector3<N>
+where N: Numeric
+    , N: Rand {
+
+    fn rand<R: Rng>(rng: &mut R) -> Self {
+        Vector3 { x: N::rand(rng)
+                , y: N::rand(rng)
+                , z: N::rand(rng)
+                }
+    }
+}
 
 macro_rules! e { ($e:expr) => { $e } }
 
@@ -140,6 +156,19 @@ where N: Numeric
     , N: Copy { pub x: N
               , pub y: N
               }
+
+#[cfg(features = "rand")]
+impl<N> Rand for Vector2<N>
+where N: Numeric
+    , N: Rand {
+
+    fn rand<R: Rng>(rng: &mut R) -> Self {
+        Vector2 { x: N::rand(rng)
+                , y: N::rand(rng)
+                }
+    }
+}
+
 
 macro_rules! e { ($e:expr) => { $e } }
 
