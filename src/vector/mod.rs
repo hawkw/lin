@@ -1,5 +1,6 @@
 use super::{Numeric, Columnar, Tabular};
 use std::ops::{Add, Sub, Mul, Div, Rem};
+use std::convert;
 
 #[cfg(features = "parallel")]
 use super::parallel::*;
@@ -87,6 +88,22 @@ where N: Numeric
                 }
     }
 
+}
+
+impl<N> convert::From<[N; 3]> for Vector3<N>
+where N: Numeric
+    , N: Copy {
+        fn from(a: [N; 3]) -> Self {
+            Vector3 { x: a[0], y: a[1], z: a[2] }
+        }
+}
+
+impl<'a, N> convert::From<&'a [N; 3]> for Vector3<N>
+where N: Numeric
+    , N: Copy {
+        fn from(a: &[N; 3]) -> Self {
+            Vector3 { x: a[0], y: a[1], z: a[2] }
+        }
 }
 
 macro_rules! e { ($e:expr) => { $e } }
@@ -250,6 +267,22 @@ where N: Numeric
                 }
     }
 
+}
+
+impl<N> convert::From<[N; 2]> for Vector2<N>
+where N: Numeric
+    , N: Copy {
+        fn from(a: [N; 2]) -> Self {
+            Vector2 { x: a[0], y: a[1] }
+        }
+}
+
+impl<'a, N> convert::From<&'a [N; 2]> for Vector2<N>
+where N: Numeric
+    , N: Copy {
+        fn from(a: &[N; 2]) -> Self {
+            Vector2 { x: a[0], y: a[1] }
+        }
 }
 
 // macro_rules! e { ($e:expr) => { $e } }
