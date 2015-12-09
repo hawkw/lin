@@ -45,7 +45,10 @@ where N: Numeric
     }
 }
 
-impl<N> Columnar for Vector3<N> {
+impl<N> Columnar for Vector3<N>
+where N: Numeric
+    , N: Copy {
+
     type Column = Vector3<N>;
 
     #[inline] fn ncols(&self) -> usize { 1 }
@@ -60,7 +63,10 @@ impl<N> Columnar for Vector3<N> {
 
 }
 
-impl<N> Tabular for Vector3<N> {
+impl<N> Tabular for Vector3<N>
+where N: Numeric
+    , N: Copy {
+
     type Row = N;
     #[inline] fn nrows(&self) -> usize { 3 }
     #[inline] fn row(&self, i: usize) -> Self::Row {
@@ -204,7 +210,10 @@ where N: Numeric
     }
 }
 
-impl<N> Columnar for Vector2<N> {
+impl<N> Columnar for Vector2<N>
+where N: Numeric
+    , N: Copy {
+
     type Column = Vector2<N>;
 
     #[inline] fn ncols(&self) -> usize { 1 }
@@ -219,7 +228,10 @@ impl<N> Columnar for Vector2<N> {
 
 }
 
-impl<N> Tabular for Vector2<N> {
+impl<N> Tabular for Vector2<N>
+where N: Numeric
+    , N: Copy {
+        
     type Row = N;
     #[inline] fn nrows(&self) -> usize { 3 }
     #[inline] fn row(&self, i: usize) -> Self::Row {
@@ -328,3 +340,5 @@ where Self: Simdalize<Elem = N>
     type Output = Self;
     fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
 }
+
+pub struct VectorN<'a, N: Numeric + 'a>(&'a [N]);
