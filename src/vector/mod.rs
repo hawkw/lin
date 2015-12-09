@@ -7,6 +7,9 @@ use super::parallel::*;
 #[cfg(features = "rand")]
 use rand::Rand;
 
+#[cfg(test)]
+mod test;
+
 pub trait Vector<N>: Sized
 where N: Numeric {
 
@@ -231,7 +234,7 @@ where N: Numeric
 impl<N> Tabular for Vector2<N>
 where N: Numeric
     , N: Copy {
-        
+
     type Row = N;
     #[inline] fn nrows(&self) -> usize { 3 }
     #[inline] fn row(&self, i: usize) -> Self::Row {
