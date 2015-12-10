@@ -1,5 +1,6 @@
 use super::*;
 use quickcheck::quickcheck;
+use quickcheck::TestResult;
 
 #[test]
 fn test_v2_addition_simple() {
@@ -25,13 +26,39 @@ fn test_v2_dot_simple() {
 macro_rules! e { ($e:expr) => { $e } }
 macro_rules! v2_arith_props {
     ($($fun:ident, $op:tt)*) => {$(
-        #[quickcheck]
-        fn $fun( x1: isize, x2: isize
-                           , y1: isize, y2: isize) -> bool {
-            let v1 = Vector2 { x: x1, y: y1 };
-            let v2 = Vector2 { x: x2, y: y2 };
-            Vector2 { x: e!(x1 $op x2), y: e!(y1 $op y2)} == e!(v1 $op v2)
+        // #[quickcheck]
+        #[test]
+        fn $fun() {
+            fn prop( x1: isize, x2: isize
+                   , y1: isize, y2: isize) -> bool
+           {
+               let v1 = Vector2 { x: x1, y: y1 };
+               let v2 = Vector2 { x: x2, y: y2 };
+               Vector2 { x: e!(x1 $op x2), y: e!(y1 $op y2)} == e!(v1 $op v2)
+           }
+           quickcheck(prop as fn(isize, isize, isize,isize) -> bool );
         }
+    )*}
+}
+
+macro_rules! v2_div_props {
+    ($($fun:ident, $op:tt)*) => {$(
+        // #[quickcheck]
+        #[test]
+        fn $fun() {
+            fn prop( x1: isize, x2: isize
+                   , y1: isize, y2: isize) -> TestResult {
+                if x1 == 0 || x2 == 0 || y1 == 0 || y2 == 0 {
+                    TestResult::discard()
+                } else {
+                    let v1 = Vector2 { x: x1, y: y1 };
+                    let v2 = Vector2 { x: x2, y: y2 };
+                    let v3 = Vector2 { x: e!(x1 $op x2), y: e!(y1 $op y2)};
+                    TestResult::from_bool(v3 == e!(v1 $op v2))
+                }
+            }
+            quickcheck(prop as fn(isize, isize, isize,isize) -> TestResult );
+       }
     )*}
 }
 
@@ -40,3 +67,8 @@ v2_arith_props!( prop_v2_addition, +
                 //  prop_v2_division, /
                 //  prop_v2_mod, %
                 );
+v2_div_props!( // prop_v2_addition, +
+               // prop_v2_subtraction, -
+               prop_v2_division, /
+               prop_v2_mod, %
+            );

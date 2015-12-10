@@ -19,9 +19,9 @@ git = "https://github.com/huonw/simd"
 optional = true
 
 [dependencies.rand]
-version = "0.3"
+version = "^0.3"
 optional = true
 
 [dev-dependencies]
-quickcheck = "0.2"
-quickcheck_macros = "0.2"
+quickcheck = "^0.2.24"
+# quickcheck_macros = "^0.2.24"
