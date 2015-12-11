@@ -26,6 +26,7 @@ pub trait Numeric: PartialEq + PartialOrd
                              + Div<Self>
                              + Rem<Self>
                              + Zero
+                             + One
                              + Sized {}
 
 #[cfg(not(features = "unstable"))]
@@ -38,10 +39,13 @@ pub trait Numeric: PartialEq + PartialOrd
                              + Sized {}
 
 macro_rules! make_numeric {
-    ($($t:ty)*) => { $(impl Numeric for $t {})* };
+    ($($t:ty),*) => { $(impl Numeric for $t {})* };
 }
 
-make_numeric!(u8 u16 u32 u64 usize i8 i16 i32 i64 isize f32 f64);
+make_numeric!( u8, u16, u32, u64, usize
+             , i8, i16, i32, i64, isize
+             , f32, f64
+             );
 
 pub trait Columnar: Sized {
     type Column;

@@ -25,7 +25,7 @@ fn test_v2_dot_simple() {
 
 macro_rules! e { ($e:expr) => { $e } }
 macro_rules! v2_arith_props {
-    ($($fun:ident, $op:tt)*) => {$(
+    ($($fun:ident, $op:tt),*) => {$(
         #[quickcheck]
         fn $fun( x1: isize, x2: isize
                , y1: isize, y2: isize) -> bool
@@ -38,10 +38,10 @@ macro_rules! v2_arith_props {
 }
 
 macro_rules! v2_div_props {
-    ($($fun:ident, $op:tt)*) => {$(
+    ($($fun:ident, $op:tt),*) => {$(
         #[quickcheck]
         fn $fun( x1: isize, x2: isize
-                , y1: isize, y2: isize) -> TestResult
+               , y1: isize, y2: isize) -> TestResult
         {
             if x1 == 0 || x2 == 0 || y1 == 0 || y2 == 0 {
                 TestResult::discard()
@@ -56,12 +56,10 @@ macro_rules! v2_div_props {
 }
 
 v2_arith_props!( prop_v2_addition, +
-                 prop_v2_subtraction, -
+               , prop_v2_subtraction, -
                 //  prop_v2_division, /
                 //  prop_v2_mod, %
                 );
-v2_div_props!( // prop_v2_addition, +
-               // prop_v2_subtraction, -
-               prop_v2_division, /
-               prop_v2_mod, %
-            );
+v2_div_props!( prop_v2_division, /
+             , prop_v2_mod, %
+             );
