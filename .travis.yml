@@ -4,6 +4,12 @@ rust:
   - nightly
   - stable
   - beta
+  
+matrix:
+  allow_failures:
+   - rust: beta
+   - rust: stable
+  fast_finish: true
 
 # install Coveralls dependencies
 addons:
