@@ -28,6 +28,64 @@ where N: Numeric {
     }
 }
 
+/// A 5D vector of any numeric type.
+///
+/// This is the non-SIMD version.
+#[cfg(not(simd))]
+#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
+#[repr(C)]
+pub struct Vector5<N>
+where N: Numeric
+    , N: Copy { pub x: N
+              , pub y: N
+              , pub z: N
+              , pub w: N
+              , pub a: N
+              }
+
+#[cfg(features = "rand")]
+impl<N> Rand for Vector5<N>
+where N: Numeric
+    , N: Rand {
+
+    fn rand<R: Rng>(rng: &mut R) -> Self {
+        Vector3 { x: N::rand(rng)
+                , y: N::rand(rng)
+                , z: N::rand(rng)
+                , w: N::rand(rng)
+                , a: N::rand(rng)
+                }
+    }
+}
+
+/// A 4D vector of any numeric type.
+///
+/// This is the non-SIMD version.
+#[cfg(not(simd))]
+#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
+#[repr(C)]
+pub struct Vector4<N>
+where N: Numeric
+    , N: Copy { pub x: N
+              , pub y: N
+              , pub z: N
+              , pub w: N
+              }
+
+#[cfg(features = "rand")]
+impl<N> Rand for Vector4<N>
+where N: Numeric
+    , N: Rand {
+
+    fn rand<R: Rng>(rng: &mut R) -> Self {
+        Vector3 { x: N::rand(rng)
+                , y: N::rand(rng)
+                , z: N::rand(rng)
+                , w: N::rand(rng)
+                }
+    }
+}
+
 /// A 3D vector of any numeric type.
 ///
 /// This is the non-SIMD version.
@@ -179,11 +237,6 @@ where N: Numeric
     }
 }
 
-impl_converts! { Vector2, 2
-               , Vector3, 3
-               }
-impl_index! { Vector2, Vector3 }
-
 impl_v2_ops! { Add, add, +
                Sub, sub, -
                Div, div, /
@@ -223,3 +276,15 @@ where Self: Simdalize<Elem = N>
 }
 
 pub struct VectorN<'a, N: Numeric + 'a>(&'a [N]);
+
+impl_converts! { Vector2, 2
+               , Vector3, 3
+               , Vector4, 4
+               , Vector5, 5
+               }
+
+impl_index! { Vector2
+            , Vector3
+            , Vector4
+            , Vector5
+            }
