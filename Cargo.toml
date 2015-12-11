@@ -24,4 +24,4 @@ optional = true
 
 [dev-dependencies]
 quickcheck = "^0.2.24"
-# quickcheck_macros = "^0.2.24"
+quickcheck_macros = { git = "https://github.com/BurntSushi/quickcheck" }
