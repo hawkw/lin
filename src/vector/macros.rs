@@ -114,7 +114,7 @@ macro_rules! impl_v2_ops {
 
 macro_rules! impl_converts {
     ($($v: ident, $c: expr),+) => { $(
-        impl<N> AsRef<[N; $c]> for $v<N>
+        impl<N> convert::AsRef<[N; $c]> for $v<N>
         where N: Numeric
             , N: Copy {
             #[inline]
@@ -122,7 +122,7 @@ macro_rules! impl_converts {
                 unsafe { transmute(self) }
             }
         }
-        impl<N> AsMut<[N; $c]> for $v<N>
+        impl<N> convert::AsMut<[N; $c]> for $v<N>
         where N: Numeric
             , N: Copy {
             #[inline]
@@ -130,7 +130,7 @@ macro_rules! impl_converts {
                 unsafe { transmute(self) }
             }
         }
-        impl<'a, N> From<&'a [N; $c]> for &'a $v<N>
+        impl<'a, N> convert::From<&'a [N; $c]> for &'a $v<N>
         where N: Numeric
             , N: Copy {
             #[inline]
@@ -138,7 +138,7 @@ macro_rules! impl_converts {
                 unsafe { transmute(a) }
             }
         }
-        impl<'a, N> From<&'a mut [N; $c]> for &'a mut $v<N>
+        impl<'a, N> convert::From<&'a mut [N; $c]> for &'a mut $v<N>
         where N: Numeric
             , N: Copy {
             #[inline]
@@ -154,5 +154,60 @@ macro_rules! impl_converts {
         //         unsafe { transmute(a) }
         //     }
         // }
+    )+}
+}
+
+macro_rules! impl_index {
+    ($($v: ident),+) => { $(
+        impl<N> ops::Index<usize> for $v<N>
+        where N: Numeric
+            , N: Copy {
+            type Output = N;
+
+            #[inline] fn index(&self, i: usize) -> &N {
+                &self.as_ref()[i]
+            }
+        }
+
+        impl<N> ops::IndexMut<usize> for $v<N>
+        where N: Numeric
+            , N: Copy {
+            #[inline] fn index_mut(&mut self, i: usize) -> &mut N {
+                &mut self.as_mut()[i]
+            }
+        }
+        
+        impl<N> Columnar for $v<N>
+        where N: Numeric
+            , N: Copy {
+
+            type Column = $v<N>;
+
+            #[inline] fn ncols(&self) -> usize { 1 }
+            #[inline] fn column(&self, i: usize) -> Self::Column {
+                if i == 0 { *self }
+                else { panic!("Index out of bounds!") }
+            }
+            #[inline] fn column_mut(&mut self, i: usize) -> &mut Self::Column {
+                if i == 0 { self }
+                else { panic!("Index out of bounds!") }
+            }
+
+        }
+
+        impl<N> Tabular for $v<N>
+        where N: Numeric
+            , N: Copy {
+
+            type Row = N;
+            #[inline] fn nrows(&self) -> usize { 3 }
+            #[inline] fn row(&self, i: usize) -> Self::Row {
+                self.as_ref()[i]
+            }
+            #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
+                self.as_mut()[i]
+            }
+
+        }
     )+}
 }

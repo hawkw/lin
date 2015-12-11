@@ -1,5 +1,6 @@
 use super::{Numeric, Columnar, Tabular};
 use std::ops::{Add, Sub, Mul, Div, Rem};
+use std::ops;
 use std::convert;
 use std::mem::transmute;
 
@@ -53,46 +54,46 @@ where N: Numeric
     }
 }
 
-impl<N> Columnar for Vector3<N>
-where N: Numeric
-    , N: Copy {
-
-    type Column = Vector3<N>;
-
-    #[inline] fn ncols(&self) -> usize { 1 }
-    #[inline] fn column(&self, i: usize) -> Self::Column {
-        if i == 0 { *self }
-        else { panic!("Index out of bounds!") }
-    }
-    #[inline] fn column_mut(&mut self, i: usize) -> &mut Self::Column {
-        if i == 0 { self }
-        else { panic!("Index out of bounds!") }
-    }
-
-}
-
-impl<N> Tabular for Vector3<N>
-where N: Numeric
-    , N: Copy {
-
-    type Row = N;
-    #[inline] fn nrows(&self) -> usize { 3 }
-    #[inline] fn row(&self, i: usize) -> Self::Row {
-        match i { 0 => self.x
-                , 1 => self.y
-                , 2 => self.z
-                , _ => panic!("Index out of bounds!")
-                }
-    }
-    #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
-        match i { 0 => &mut self.x
-                , 1 => &mut self.y
-                , 2 => &mut self.z
-                , _ => panic!("Index out of bounds!")
-                }
-    }
-
-}
+// impl<N> Columnar for Vector3<N>
+// where N: Numeric
+//     , N: Copy {
+//
+//     type Column = Vector3<N>;
+//
+//     #[inline] fn ncols(&self) -> usize { 1 }
+//     #[inline] fn column(&self, i: usize) -> Self::Column {
+//         if i == 0 { *self }
+//         else { panic!("Index out of bounds!") }
+//     }
+//     #[inline] fn column_mut(&mut self, i: usize) -> &mut Self::Column {
+//         if i == 0 { self }
+//         else { panic!("Index out of bounds!") }
+//     }
+//
+// }
+//
+// impl<N> Tabular for Vector3<N>
+// where N: Numeric
+//     , N: Copy {
+//
+//     type Row = N;
+//     #[inline] fn nrows(&self) -> usize { 3 }
+//     #[inline] fn row(&self, i: usize) -> Self::Row {
+//         match i { 0 => self.x
+//                 , 1 => self.y
+//                 , 2 => self.z
+//                 , _ => panic!("Index out of bounds!")
+//                 }
+//     }
+//     #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
+//         match i { 0 => &mut self.x
+//                 , 1 => &mut self.y
+//                 , 2 => &mut self.z
+//                 , _ => panic!("Index out of bounds!")
+//                 }
+//     }
+//
+// }
 
 // impl<N> convert::From<[N; 3]> for Vector3<N>
 // where N: Numeric
@@ -178,48 +179,10 @@ where N: Numeric
     }
 }
 
-impl<N> Columnar for Vector2<N>
-where N: Numeric
-    , N: Copy {
-
-    type Column = Vector2<N>;
-
-    #[inline] fn ncols(&self) -> usize { 1 }
-    #[inline] fn column(&self, i: usize) -> Self::Column {
-        if i == 0 { *self }
-        else { panic!("Index out of bounds!") }
-    }
-    #[inline] fn column_mut(&mut self, i: usize) -> &mut Self::Column {
-        if i == 0 { self }
-        else { panic!("Index out of bounds!") }
-    }
-
-}
-
-impl<N> Tabular for Vector2<N>
-where N: Numeric
-    , N: Copy {
-
-    type Row = N;
-    #[inline] fn nrows(&self) -> usize { 3 }
-    #[inline] fn row(&self, i: usize) -> Self::Row {
-        match i { 0 => self.x
-                , 1 => self.y
-                , _ => panic!("Index out of bounds!")
-                }
-    }
-    #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
-        match i { 0 => &mut self.x
-                , 1 => &mut self.y
-                , _ => panic!("Index out of bounds!")
-                }
-    }
-
-}
-
 impl_converts! { Vector2, 2
                , Vector3, 3
                }
+impl_index! { Vector2, Vector3 }
 
 impl_v2_ops! { Add, add, +
                Sub, sub, -
