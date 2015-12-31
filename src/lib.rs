@@ -78,8 +78,8 @@ where C: Columnar
 
 impl<'a, C> Iterator for ColsIterator<'a, C>
 where C: Columnar {
-    type Item = C::Column;
 
+    type Item = C::Column;
     fn next(&mut self) -> Option<Self::Item> {
         match self.i {
             col if col > self.max => {
@@ -116,8 +116,8 @@ where R: Tabular
 
 impl<'a, R> Iterator for RowsIterator<'a, R>
 where R: Tabular {
-    type Item = R::Row;
 
+    type Item = R::Row;
     fn next(&mut self) -> Option<Self::Item> {
         match self.i {
             row if row > self.max => {

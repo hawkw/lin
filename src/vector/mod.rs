@@ -10,11 +10,8 @@ use super::parallel::*;
 #[cfg(features = "rand")]
 use rand::Rand;
 
-#[cfg(test)]
-mod test;
-
-#[macro_use]
-mod macros;
+#[cfg(test)] mod test;
+#[macro_use] mod macros;
 
 pub trait Vector<N>: Sized
 where N: Numeric {
@@ -22,8 +19,7 @@ where N: Numeric {
     #[cfg(features = "unstable")]
     fn is_perpendicular_to<M>(self, v_prime: Self) -> bool
     where Self: Mul<Self, Output=M>
-        , M: PartialEq
-    {
+        , M: PartialEq {
         (self * v_prime) == M::zero()
     }
 }
@@ -169,7 +165,7 @@ where N: Numeric
 //         }
 // }
 
-impl_v3_ops!{
+impl_v3_ops! {
     Add, add, +
     Sub, sub, -
     Div, div, /
@@ -178,8 +174,8 @@ impl_v3_ops!{
 
 impl<N> Mul<N> for Vector3<N>
 where N: Numeric + Mul<Output = N>
-    , N: Copy
-{
+    , N: Copy {
+
     type Output = Self;
     fn mul(self, rhs: N) -> Self {
         Vector3 { x: self.x * rhs
@@ -193,8 +189,8 @@ where N: Numeric + Mul<Output = N>
 impl<N> Mul<Vector3<N>> for Vector3<N>
 where N: Numeric
     , N: Mul<Output = N> + Add<Output = N>
-    , N: Copy
-{
+    , N: Copy {
+
     type Output = N;
     fn mul(self, rhs: Self) -> N {
         (self.x * rhs.x) +
@@ -206,10 +202,12 @@ where N: Numeric
 #[cfg(features = "parallel")]
 impl<N> Mul<N> for Vector3<N>
 where Self: Simdalize<Elem = N>
-    , N: Numeric + Mul<Output = N>
-{
+    , N: Numeric + Mul<Output = N> {
+
     type Output = Self;
-    fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
+    fn mul(self, rhs: N) -> Output {
+        self.simdalize() * N::splat(rhs)
+    }
 }
 
 
@@ -245,8 +243,8 @@ impl_v2_ops! { Add, add, +
 
 impl<N> Mul<N> for Vector2<N>
 where N: Numeric + Mul<Output = N>
-    , N: Copy
-{
+    , N: Copy {
+
     type Output = Self;
     fn mul(self, rhs: N) -> Self {
         Vector2 { x: self.x * rhs
@@ -258,19 +256,20 @@ where N: Numeric + Mul<Output = N>
 impl<N> Mul<Vector2<N>> for Vector2<N>
 where N: Numeric
     , N: Mul<Output = N> + Add<Output = N>
-    , N: Copy
-{
+    , N: Copy {
+
     type Output = N;
     fn mul(self, rhs: Self) -> N {
         (self.x * rhs.x) + (self.y * rhs.y)
     }
+
 }
 
 #[cfg(features = "parallel")]
 impl<N> Mul<N> for Vector2<N>
 where Self: Simdalize<Elem = N>
-    , N: Numeric + Mul<Output = N>
-{
+    , N: Numeric + Mul<Output = N> {
+
     type Output = Self;
     fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
 }

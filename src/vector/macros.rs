@@ -1,17 +1,13 @@
-#![macro_use]
-
-// use std::mem;
-use super::{Vector, Vector2, Vector3};
-
 macro_rules! e { ($e:expr) => { $e } }
 
 macro_rules! impl_v3_ops {
     ($($name:ident, $fun:ident, $op:tt)*) => {$(
         // implement the operation for vector & vector
         impl<N> $name<Vector3<N>> for Vector3<N>
-        where N: Numeric + $name<Output=N>
-            , N: Copy
-        {
+        where N: Numeric
+            , N: $name<Output=N>
+            , N: Copy {
+
             type Output = Vector3<N>;
             fn $fun(self, rhs: Self) -> Vector3<N> {
                 Vector3 { x: e!(self.x $op rhs.x)
@@ -22,9 +18,10 @@ macro_rules! impl_v3_ops {
         }
         // implement the operation for vector & scalar
         impl<N> $name<N> for Vector3<N>
-        where N: Numeric + $name<Output=N>
-            , N: Copy
-        {
+        where N: Numeric
+            , N: $name<Output=N>
+            , N: Copy {
+
             type Output = Vector3<N>;
             fn $fun(self, rhs: N) -> Vector3<N> {
                 Vector3 { x: e!(self.x $op rhs)
@@ -37,9 +34,10 @@ macro_rules! impl_v3_ops {
         #[cfg(features = "parallel")]
         impl<N> $name<N> for Vector3<N>
         where Self: Simdalize<Elem = N>
-            , N: Numeric + $name<Output = N>
-            , N: Copy
-        {
+            , N: Numeric
+            , N: $name<Output = N>
+            , N: Copy {
+
             type Output = Self;
             fn $fun(self, rhs: N) -> Output {
                 e!(self.simdalize() $op N::splat(rhs))
@@ -49,8 +47,9 @@ macro_rules! impl_v3_ops {
         #[cfg(features = "parallel")]
         impl<N> $name<Vector3<N>> for Vector3<N>
         where Self: Simdalize<Elem = N>
-            , N: Numeric + $name<Output = N>
-        {
+            , N: Numeric
+            , N: $name<Output = N> {
+
             type Output = Self;
             fn $fun(self, rhs: Self) -> Output {
                 e!(self.simdalize() $op rhs.simdalize())
@@ -64,9 +63,10 @@ macro_rules! impl_v2_ops {
     ($($name:ident, $fun:ident, $op:tt)*) => {$(
         // implement the operation for vector & vector
         impl<N> $name<Vector2<N>> for Vector2<N>
-        where N: Numeric + $name<Output=N>
-            , N: Copy
-        {
+        where N: Numeric
+            , N: $name<Output=N>
+            , N: Copy {
+
             type Output = Vector2<N>;
             fn $fun(self, rhs: Self) -> Vector2<N> {
                 Vector2 { x: e!(self.x $op rhs.x)
@@ -76,9 +76,10 @@ macro_rules! impl_v2_ops {
         }
         // implement the operation for vector & scalar
         impl<N> $name<N> for Vector2<N>
-        where N: Numeric + $name<Output=N>
-            , N: Copy
-        {
+        where N: Numeric
+            , N: $name<Output=N>
+            , N: Copy {
+
             type Output = Vector2<N>;
             fn $fun(self, rhs: N) -> Vector2<N> {
                 Vector2 { x: e!(self.x $op rhs)
@@ -91,8 +92,8 @@ macro_rules! impl_v2_ops {
         impl<N> $name<N> for Vector2<N>
         where Self: Simdalize<Elem = N>
             , N: Numeric + $name<Output = N>
-            , N: Copy
-        {
+            , N: Copy {
+
             type Output = Self;
             fn $fun(self, rhs: N) -> Output {
                 e!(self.simdalize() $op N::splat(rhs))
@@ -102,8 +103,9 @@ macro_rules! impl_v2_ops {
         #[cfg(features = "parallel")]
         impl<N> $name<Vector2<N>> for Vector2<N>
         where Self: Simdalize<Elem = N>
-            , N: Numeric + $name<Output = N>
-        {
+            , N: Numeric
+            , N: $name<Output = N> {
+
             type Output = Self;
             fn $fun(self, rhs: Self) -> Output {
                 e!(self.simdalize() $op rhs.simdalize())
@@ -117,32 +119,32 @@ macro_rules! impl_converts {
         impl<N> convert::AsRef<[N; $c]> for $v<N>
         where N: Numeric
             , N: Copy {
-            #[inline]
-            fn as_ref(&self) -> &[N; $c] {
+
+            #[inline] fn as_ref(&self) -> &[N; $c] {
                 unsafe { transmute(self) }
             }
         }
         impl<N> convert::AsMut<[N; $c]> for $v<N>
         where N: Numeric
             , N: Copy {
-            #[inline]
-            fn as_mut(&mut self) -> &mut [N; $c] {
+
+            #[inline] fn as_mut(&mut self) -> &mut [N; $c] {
                 unsafe { transmute(self) }
             }
         }
         impl<'a, N> convert::From<&'a [N; $c]> for &'a $v<N>
         where N: Numeric
             , N: Copy {
-            #[inline]
-            fn from(a: &'a [N; $c]) -> &'a $v<N> {
+
+            #[inline] fn from(a: &'a [N; $c]) -> &'a $v<N> {
                 unsafe { transmute(a) }
             }
         }
         impl<'a, N> convert::From<&'a mut [N; $c]> for &'a mut $v<N>
         where N: Numeric
             , N: Copy {
-            #[inline]
-            fn from(a: &'a mut [N; $c]) -> &'a mut $v<N> {
+
+            #[inline] fn from(a: &'a mut [N; $c]) -> &'a mut $v<N> {
                 unsafe { transmute(a) }
             }
         }
@@ -162,8 +164,8 @@ macro_rules! impl_index {
         impl<N> ops::Index<usize> for $v<N>
         where N: Numeric
             , N: Copy {
-            type Output = N;
 
+            type Output = N;
             #[inline] fn index(&self, i: usize) -> &N {
                 &self.as_ref()[i]
             }
@@ -172,6 +174,7 @@ macro_rules! impl_index {
         impl<N> ops::IndexMut<usize> for $v<N>
         where N: Numeric
             , N: Copy {
+
             #[inline] fn index_mut(&mut self, i: usize) -> &mut N {
                 &mut self.as_mut()[i]
             }
