@@ -176,13 +176,12 @@ macro_rules! impl_index {
                 &mut self.as_mut()[i]
             }
         }
-        
+
         impl<N> Columnar for $v<N>
         where N: Numeric
             , N: Copy {
 
             type Column = $v<N>;
-
             #[inline] fn ncols(&self) -> usize { 1 }
             #[inline] fn column(&self, i: usize) -> Self::Column {
                 if i == 0 { *self }
@@ -205,7 +204,7 @@ macro_rules! impl_index {
                 self.as_ref()[i]
             }
             #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
-                self.as_mut()[i]
+                &mut self.as_mut()[i]
             }
 
         }
