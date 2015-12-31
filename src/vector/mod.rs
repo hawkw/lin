@@ -1,4 +1,5 @@
 use super::{Numeric, Columnar, Tabular};
+
 use std::ops::{Add, Sub, Mul, Div, Rem};
 use std::ops;
 use std::convert;
