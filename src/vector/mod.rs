@@ -43,19 +43,7 @@ where N: Numeric
               }
 
 #[cfg(features = "rand")]
-impl<N> Rand for Vector5<N>
-where N: Numeric
-    , N: Rand {
-
-    fn rand<R: Rng>(rng: &mut R) -> Self {
-        Vector3 { x: N::rand(rng)
-                , y: N::rand(rng)
-                , z: N::rand(rng)
-                , w: N::rand(rng)
-                , a: N::rand(rng)
-                }
-    }
-}
+impl_rand! { Vector5, x, y, z, w, a }
 
 /// A 4D vector of any numeric type.
 ///
@@ -72,18 +60,7 @@ where N: Numeric
               }
 
 #[cfg(features = "rand")]
-impl<N> Rand for Vector4<N>
-where N: Numeric
-    , N: Rand {
-
-    fn rand<R: Rng>(rng: &mut R) -> Self {
-        Vector3 { x: N::rand(rng)
-                , y: N::rand(rng)
-                , z: N::rand(rng)
-                , w: N::rand(rng)
-                }
-    }
-}
+impl_rand! { Vector4, x, y, z, w }
 
 /// A 3D vector of any numeric type.
 ///
@@ -99,82 +76,9 @@ where N: Numeric
               }
 
 #[cfg(features = "rand")]
-impl<N> Rand for Vector3<N>
-where N: Numeric
-    , N: Rand {
-
-    fn rand<R: Rng>(rng: &mut R) -> Self {
-        Vector3 { x: N::rand(rng)
-                , y: N::rand(rng)
-                , z: N::rand(rng)
-                }
-    }
-}
-
+impl_rand! { Vector3, x, y, z }
 impl_ops! { Vector3, x, y, z }
-// impl<N> Columnar for Vector3<N>
-// where N: Numeric
-//     , N: Copy {
-//
-//     type Column = Vector3<N>;
-//
-//     #[inline] fn ncols(&self) -> usize { 1 }
-//     #[inline] fn column(&self, i: usize) -> Self::Column {
-//         if i == 0 { *self }
-//         else { panic!("Index out of bounds!") }
-//     }
-//     #[inline] fn column_mut(&mut self, i: usize) -> &mut Self::Column {
-//         if i == 0 { self }
-//         else { panic!("Index out of bounds!") }
-//     }
-//
-// }
-//
-// impl<N> Tabular for Vector3<N>
-// where N: Numeric
-//     , N: Copy {
-//
-//     type Row = N;
-//     #[inline] fn nrows(&self) -> usize { 3 }
-//     #[inline] fn row(&self, i: usize) -> Self::Row {
-//         match i { 0 => self.x
-//                 , 1 => self.y
-//                 , 2 => self.z
-//                 , _ => panic!("Index out of bounds!")
-//                 }
-//     }
-//     #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
-//         match i { 0 => &mut self.x
-//                 , 1 => &mut self.y
-//                 , 2 => &mut self.z
-//                 , _ => panic!("Index out of bounds!")
-//                 }
-//     }
-//
-// }
 
-// impl<N> convert::From<[N; 3]> for Vector3<N>
-// where N: Numeric
-//     , N: Copy {
-//         fn from(a: [N; 3]) -> Self {
-//             Vector3 { x: a[0], y: a[1], z: a[2] }
-//         }
-// }
-//
-// impl<'a, N> convert::From<&'a [N; 3]> for Vector3<N>
-// where N: Numeric
-//     , N: Copy {
-//         fn from(a: &[N; 3]) -> Self {
-//             Vector3 { x: a[0], y: a[1], z: a[2] }
-//         }
-// }
-//
-// impl_v3_ops! {
-//     Add, add, +
-//     Sub, sub, -
-//     Div, div, /
-//     Rem, rem, %
-// }
 
 impl<N> Mul<N> for Vector3<N>
 where N: Numeric + Mul<Output = N>
@@ -228,17 +132,7 @@ where N: Numeric
               }
 
 #[cfg(features = "rand")]
-impl<N> Rand for Vector2<N>
-where N: Numeric
-    , N: Rand {
-
-    fn rand<R: Rng>(rng: &mut R) -> Self {
-        Vector2 { x: N::rand(rng)
-                , y: N::rand(rng)
-                }
-    }
-}
-
+impl_rand! { Vector2, x, y }
 impl_ops! { Vector2, x, y }
 
 // impl_v2_ops! { Add, add, +

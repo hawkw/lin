@@ -116,3 +116,17 @@ macro_rules! impl_index {
         }
     )+}
 }
+
+#[cfg(features = "rand")]
+macro_rules! impl_rand {
+    ($ty: ident, $($sub: ident),+) => {
+        impl<N> Rand for $ty<N>
+        where N: Numeric
+            , N: Rand {
+
+            fn rand<R: Rng>(rng: &mut R) -> Self {
+                $ty { $($sub: N::rand(rng)),+ }
+            }
+        }
+    }
+}
