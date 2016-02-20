@@ -12,6 +12,8 @@ use super::parallel::*;
 use rand::Rand;
 
 #[cfg(test)] mod test;
+#[cfg(test)] mod bench;
+
 #[macro_use] mod macros;
 
 pub trait Vector<N>: Sized

@@ -2,6 +2,7 @@ use super::*;
 // use quickcheck::quickcheck;
 use quickcheck::TestResult;
 
+
 #[test]
 fn test_v2_addition_simple() {
     let v1 = Vector2 { x: 1, y: 1 };
