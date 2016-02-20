@@ -111,6 +111,7 @@ where N: Numeric
     }
 }
 
+impl_ops! { Vector3, x, y, z }
 // impl<N> Columnar for Vector3<N>
 // where N: Numeric
 //     , N: Copy {
@@ -167,13 +168,13 @@ where N: Numeric
 //             Vector3 { x: a[0], y: a[1], z: a[2] }
 //         }
 // }
-
-impl_v3_ops! {
-    Add, add, +
-    Sub, sub, -
-    Div, div, /
-    Rem, rem, %
-}
+//
+// impl_v3_ops! {
+//     Add, add, +
+//     Sub, sub, -
+//     Div, div, /
+//     Rem, rem, %
+// }
 
 impl<N> Mul<N> for Vector3<N>
 where N: Numeric + Mul<Output = N>
@@ -238,11 +239,13 @@ where N: Numeric
     }
 }
 
-impl_v2_ops! { Add, add, +
-               Sub, sub, -
-               Div, div, /
-               Rem, rem, %
-             }
+impl_ops! { Vector2, x, y }
+
+// impl_v2_ops! { Add, add, +
+//                Sub, sub, -
+//                Div, div, /
+//                Rem, rem, %
+//              }
 
 impl<N> Mul<N> for Vector2<N>
 where N: Numeric + Mul<Output = N>
