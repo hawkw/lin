@@ -44,6 +44,7 @@ where N: Numeric
 
 #[cfg(features = "rand")]
 impl_rand! { Vector5, x, y, z, w, a }
+impl_ops! { Vector5, x, y, z, w, a }
 
 /// A 4D vector of any numeric type.
 ///
@@ -61,6 +62,7 @@ where N: Numeric
 
 #[cfg(features = "rand")]
 impl_rand! { Vector4, x, y, z, w }
+impl_ops! { Vector4, x, y, z, w }
 
 /// A 3D vector of any numeric type.
 ///
