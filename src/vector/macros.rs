@@ -130,3 +130,48 @@ macro_rules! impl_rand {
         }
     }
 }
+
+macro_rules! impl_converts {
+    ($($v: ident, $c: expr),+) => { $(
+        impl<N> convert::AsRef<[N; $c]> for $v<N>
+        where N: Numeric
+            , N: Copy {
+
+            #[inline] fn as_ref(&self) -> &[N; $c] {
+                unsafe { transmute(self) }
+            }
+        }
+        impl<N> convert::AsMut<[N; $c]> for $v<N>
+        where N: Numeric
+            , N: Copy {
+
+            #[inline] fn as_mut(&mut self) -> &mut [N; $c] {
+                unsafe { transmute(self) }
+            }
+        }
+        impl<'a, N> convert::From<&'a [N; $c]> for &'a $v<N>
+        where N: Numeric
+            , N: Copy {
+
+            #[inline] fn from(a: &'a [N; $c]) -> &'a $v<N> {
+                unsafe { transmute(a) }
+            }
+        }
+        impl<'a, N> convert::From<&'a mut [N; $c]> for &'a mut $v<N>
+        where N: Numeric
+            , N: Copy {
+
+            #[inline] fn from(a: &'a mut [N; $c]) -> &'a mut $v<N> {
+                unsafe { transmute(a) }
+            }
+        }
+        // impl<N: ?Sized> From<[N; $c]> for $v<N>
+        // where N: Numeric
+        //     , N: Copy {
+        //     #[inline]
+        //     fn from(a: [N; $c]) -> $v<N> {
+        //         unsafe { transmute(a) }
+        //     }
+        // }
+    )+}
+}
