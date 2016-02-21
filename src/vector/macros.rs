@@ -12,6 +12,16 @@ macro_rules! impl_ops {
         impl_op! { Div for $ty, div, /, $($sub),+ }
         impl_op! { Rem for $ty, rem, %, $($sub),+ }
 
+
+        #[cfg(features = "parallel")]
+        impl<N> Mul<N> for $ty<N>
+        where Self: Simdalize<Elem = N>
+            , N: Numeric + Mul<Output = N> {
+
+            type Output = Self;
+            fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
+        }
+
         impl<N> Mul<N> for $ty<N>
         where N: Numeric + Mul<Output = N>
             , N: Copy {
@@ -23,12 +33,10 @@ macro_rules! impl_ops {
 
         }
 
-        impl<'a, N> Mul<$ty<N>> for $ty<N>
+        impl<N> Mul<$ty<N>> for $ty<N>
         where N: Numeric
             , N: Mul<Output = N> + Add<Output = N>
-            , N: Copy
-            , N: Add<&'a N>
-            , N: 'a {
+            , N: Copy {
 
             type Output = N;
             fn mul(self, rhs: Self) -> N {
