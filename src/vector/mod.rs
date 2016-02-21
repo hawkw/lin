@@ -81,34 +81,6 @@ where N: Numeric
 impl_rand! { Vector3, x, y, z }
 impl_ops! { Vector3, x, y, z }
 
-
-impl<N> Mul<N> for Vector3<N>
-where N: Numeric + Mul<Output = N>
-    , N: Copy {
-
-    type Output = Self;
-    fn mul(self, rhs: N) -> Self {
-        Vector3 { x: self.x * rhs
-                , y: self.y * rhs
-                , z: self.z * rhs
-                }
-    }
-
-}
-
-impl<N> Mul<Vector3<N>> for Vector3<N>
-where N: Numeric
-    , N: Mul<Output = N> + Add<Output = N>
-    , N: Copy {
-
-    type Output = N;
-    fn mul(self, rhs: Self) -> N {
-        (self.x * rhs.x) +
-        (self.y * rhs.y) +
-        (self.z * rhs.z)
-    }
-}
-
 #[cfg(features = "parallel")]
 impl<N> Mul<N> for Vector3<N>
 where Self: Simdalize<Elem = N>
@@ -136,36 +108,6 @@ where N: Numeric
 #[cfg(features = "rand")]
 impl_rand! { Vector2, x, y }
 impl_ops! { Vector2, x, y }
-
-// impl_v2_ops! { Add, add, +
-//                Sub, sub, -
-//                Div, div, /
-//                Rem, rem, %
-//              }
-
-impl<N> Mul<N> for Vector2<N>
-where N: Numeric + Mul<Output = N>
-    , N: Copy {
-
-    type Output = Self;
-    fn mul(self, rhs: N) -> Self {
-        Vector2 { x: self.x * rhs
-                , y: self.y * rhs
-                }
-    }
-}
-
-impl<N> Mul<Vector2<N>> for Vector2<N>
-where N: Numeric
-    , N: Mul<Output = N> + Add<Output = N>
-    , N: Copy {
-
-    type Output = N;
-    fn mul(self, rhs: Self) -> N {
-        (self.x * rhs.x) + (self.y * rhs.y)
-    }
-
-}
 
 #[cfg(features = "parallel")]
 impl<N> Mul<N> for Vector2<N>

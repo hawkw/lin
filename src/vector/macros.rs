@@ -1,11 +1,40 @@
 macro_rules! e { ($e:expr) => { $e } }
 
+macro_rules! sum {
+    ($x:expr) => { $x };
+    ($x:expr, $($y:expr),+) => { $x + sum!($($y),+) }
+}
+
 macro_rules! impl_ops {
     ($ty: ident, $($sub: ident),+) => {
         impl_op! { Add for $ty, add, +, $($sub),+ }
         impl_op! { Sub for $ty, sub, -, $($sub),+ }
         impl_op! { Div for $ty, div, /, $($sub),+ }
         impl_op! { Rem for $ty, rem, %, $($sub),+ }
+
+        impl<N> Mul<N> for $ty<N>
+        where N: Numeric + Mul<Output = N>
+            , N: Copy {
+
+            type Output = Self;
+            fn mul(self, rhs: N) -> Self {
+                $ty { $($sub: self.$sub * rhs),+ }
+            }
+
+        }
+
+        impl<'a, N> Mul<$ty<N>> for $ty<N>
+        where N: Numeric
+            , N: Mul<Output = N> + Add<Output = N>
+            , N: Copy
+            , N: Add<&'a N>
+            , N: 'a {
+
+            type Output = N;
+            fn mul(self, rhs: Self) -> N {
+                sum!( $(self.$sub * rhs.$sub),+ )
+            }
+        }
     }
 }
 
