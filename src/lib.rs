@@ -12,6 +12,7 @@
 #[cfg(features = "rand")] extern crate rand;
 
 pub mod vector;
+pub mod matrix;
 
 #[cfg(features = "parallel")]
 mod parallel;
