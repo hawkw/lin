@@ -55,7 +55,8 @@ macro_rules! impl_index {
         where N: Numeric
             , N: Copy {
 
-            #[inline] fn index_mut(&mut self, (x, y): (usize, usize)) -> &mut N {
+            #[inline] fn index_mut(&mut self, (x, y): (usize, usize))
+                                  -> &mut N {
                 unsafe {
                     &mut transmute::<&mut $m<N>, &mut [N; $c * $c]>(self)
                         [x + y * $c]
