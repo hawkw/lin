@@ -20,7 +20,8 @@ macro_rules! e { ($e:expr) => { $e } }
 ///    - `$rows`: The number of rows in this matrix
 ///    - `$cols`: The number of columns in this matrix
 ///    - `$sub`: The name of each subscript or element of the matrix
-///              Note that the number of `$sub`s should be equal to `$cols` *  ///              `$rows`.
+///              Note that the number of `$sub`s should be equal to `$cols` *
+///              `$rows`.
 ///
 #[macro_export]
 macro_rules! make_matrix {
