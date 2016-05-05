@@ -2,6 +2,7 @@
 #![crate_type = "lib"]
 
 #![cfg_attr(features = "unstable", feature(zero_one))]
+#![cfg_attr(features = "unstable", feature(const_fn))]
 #![cfg_attr(test, feature(plugin))]
 #![cfg_attr(test, plugin(quickcheck_macros))]
 #![feature(test)]
