@@ -5,6 +5,7 @@ macro_rules! sum {
     ($x:expr, $($y:expr),+) => { $x + sum!($($y),+) }
 }
 
+#[macro_export]
 macro_rules! make_vector {
     ($name: ident, $len:expr, $($sub: ident),+) => {
         #[cfg(not(simd))]
@@ -22,7 +23,6 @@ macro_rules! make_vector {
 
     }
 }
-
 
 macro_rules! impl_ops {
     ($ty: ident, $($sub: ident),+) => {

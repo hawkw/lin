@@ -1,5 +1,6 @@
 macro_rules! e { ($e:expr) => { $e } }
 
+#[macro_export]
 macro_rules! make_matrix {
     ($name: ident, rows: $rows:expr, cols: $cols:expr, $($sub: ident),+) => {
         #[cfg(not(simd))]
