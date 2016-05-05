@@ -164,16 +164,17 @@ macro_rules! impl_index {
 
         impl<N> Columnar for $v<N>
         where N: Copy {
-
             type Column = $v<N>;
+
             #[inline] fn ncols(&self) -> usize { 1 }
-            #[inline] fn column(&self, i: usize) -> Self::Column {
-                if i == 0 { *self }
-                else { panic!("Index out of bounds!") }
+
+            #[inline] fn column(&self, i: usize) -> Option<&Self::Column> {
+                if i == 0 { Some(self) } else { None }
             }
-            #[inline] fn column_mut(&mut self, i: usize) -> &mut Self::Column {
-                if i == 0 { self }
-                else { panic!("Index out of bounds!") }
+
+            #[inline]
+            fn column_mut(&mut self, i: usize) -> Option<&mut Self::Column> {
+                if i == 0 { Some(self) } else { None }
             }
 
         }
@@ -183,11 +184,16 @@ macro_rules! impl_index {
 
             type Row = N;
             #[inline] fn nrows(&self) -> usize { 3 }
-            #[inline] fn row(&self, i: usize) -> Self::Row {
-                self.as_ref()[i]
+
+            #[inline]
+            fn row(&self, i: usize) -> Option<&Self::Row> {
+                if i >= self.nrows() { None } else { Some(&self.as_ref()[i]) }
             }
-            #[inline] fn row_mut(&mut self, i: usize) -> &mut Self::Row {
-                &mut self.as_mut()[i]
+
+            #[inline]
+            fn row_mut(&mut self, i: usize) -> Option<&mut Self::Row> {
+                if i >= self.nrows() { None }
+                else { Some(&mut self.as_mut()[i]) }
             }
 
         }
