@@ -5,6 +5,26 @@ macro_rules! sum {
     ($x:expr, $($y:expr),+) => { $x + sum!($($y),+) }
 }
 
+macro_rules! make_vector {
+    ($name: ident, $len:expr, $($sub: ident),+) => {
+        #[cfg(not(simd))]
+        #[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
+        #[repr(C)]
+        pub struct $name<N>
+        where N: Numeric
+            , N: Copy { $(pub $sub: N),+
+                      }
+
+        impl_rand! { $name, $($sub),+ }
+
+        impl_ops! { $name, $($sub),+ }
+        impl_converts! { $name, $len }
+        impl_index! { $name }
+
+    }
+}
+
+
 macro_rules! impl_ops {
     ($ty: ident, $($sub: ident),+) => {
         impl_op! { Add for $ty, add, +, $($sub),+ }
@@ -48,7 +68,7 @@ macro_rules! impl_ops {
 
 macro_rules! impl_op {
     ($name: ident for $ty:ident, $fun: ident, $op:tt, $($sub: ident),+) => {
-        // implement the operation for vector & vector
+        // implement the operation for vector & vectorI
         impl<N> $name<$ty<N>> for $ty<N>
         where N: Numeric
             , N: $name<Output=N>
@@ -167,6 +187,11 @@ macro_rules! impl_rand {
         }
     }
 }
+
+macro_rules! impl_rand {
+    ($ty: ident, $($sub: ident),+) => { }
+}
+
 
 macro_rules! impl_converts {
     ($($v: ident, $c: expr),+) => { $(

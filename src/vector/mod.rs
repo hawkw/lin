@@ -27,107 +27,12 @@ where N: Numeric {
     }
 }
 
-/// A 5D vector of any numeric type.
-///
-/// This is the non-SIMD version.
-#[cfg(not(simd))]
-#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
-#[repr(C)]
-pub struct Vector5<N>
-where N: Numeric
-    , N: Copy { pub x: N
-              , pub y: N
-              , pub z: N
-              , pub w: N
-              , pub a: N
-              }
+make_vector! { Vector2, 2, x, y }
 
-#[cfg(features = "rand")]
-impl_rand! { Vector5, x, y, z, w, a }
-impl_ops! { Vector5, x, y, z, w, a }
+make_vector! { Vector3, 3, x, y, z }
 
-/// A 4D vector of any numeric type.
-///
-/// This is the non-SIMD version.
-#[cfg(not(simd))]
-#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
-#[repr(C)]
-pub struct Vector4<N>
-where N: Numeric
-    , N: Copy { pub x: N
-              , pub y: N
-              , pub z: N
-              , pub w: N
-              }
+make_vector! { Vector4, 4, x, y, z, w }
 
-#[cfg(features = "rand")]
-impl_rand! { Vector4, x, y, z, w }
-impl_ops! { Vector4, x, y, z, w }
-
-/// A 3D vector of any numeric type.
-///
-/// This is the non-SIMD version.
-#[cfg(not(simd))]
-#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
-#[repr(C)]
-pub struct Vector3<N>
-where N: Numeric
-    , N: Copy { pub x: N
-              , pub y: N
-              , pub z: N
-              }
-
-#[cfg(features = "rand")]
-impl_rand! { Vector3, x, y, z }
-impl_ops! { Vector3, x, y, z }
-
-#[cfg(features = "parallel")]
-impl<N> Mul<N> for Vector3<N>
-where Self: Simdalize<Elem = N>
-    , N: Numeric + Mul<Output = N> {
-
-    type Output = Self;
-    fn mul(self, rhs: N) -> Output {
-        self.simdalize() * N::splat(rhs)
-    }
-}
-
-
-/// A 2D vector of any numeric type.
-///
-/// This is the non-SIMD version.
-#[cfg(not(simd))]
-#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
-#[repr(C)]
-pub struct Vector2<N>
-where N: Numeric
-    , N: Copy { pub x: N
-              , pub y: N
-              }
-
-#[cfg(features = "rand")]
-impl_rand! { Vector2, x, y }
-impl_ops! { Vector2, x, y }
-
-#[cfg(features = "parallel")]
-impl<N> Mul<N> for Vector2<N>
-where Self: Simdalize<Elem = N>
-    , N: Numeric + Mul<Output = N> {
-
-    type Output = Self;
-    fn mul(self, rhs: N) -> Output { self.simdalize() * N::splat(rhs) }
-}
+make_vector! { Vector5, 5, x, y, z, w, a }
 
 pub struct VectorN<'a, N: Numeric + 'a>(&'a [N]);
-
-impl_converts! { Vector2, 2
-               , Vector3, 3
-               , Vector4, 4
-               , Vector5, 5
-               }
-
-impl_index! { Vector2
-            , Vector3
-            , Vector4
-            , Vector5
-            }
