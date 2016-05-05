@@ -16,8 +16,7 @@ use rand::Rand;
 
 #[macro_use] mod macros;
 
-pub trait Vector<N>: Sized
-where N: Numeric {
+pub trait Vector<N>: Sized {
 
     #[cfg(features = "unstable")]
     fn is_perpendicular_to<M>(self, v_prime: Self) -> bool

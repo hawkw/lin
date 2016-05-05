@@ -5,9 +5,38 @@ macro_rules! sum {
     ($x:expr, $($y:expr),+) => { $x + sum!($($y),+) }
 }
 
+
+/// Macro for constructing a new vector type.
+///
+/// This can be used to construct fixed-sized vectors of whatever dimension
+/// the user would like. While this crate only provides vectors of dimensons
+/// 2 through 5, it's trivial to make vectors of arbitrary length using this
+/// macro.
+///
+/// Another potential use of this macro is to create new vectors whose
+/// subscripts have different names than those provided in this crate. The
+/// vectors in `lin`  have subscripts named _x_, _y_, _z_, (as in Cartesian
+/// coördinates), _w_, and _a_; but in some applications, these subscripts
+/// might represent different quantities. Thus, users can use this macro to
+/// create new vector types whose subscripts have names with semantic meanings
+/// more appropriate to their individual use case. 
+///
+/// # Arguments
+///    - `$name`: The name of the new vector type
+///    - `$dim`: the dimension (number of elements) of the new vector type
+///    - `$sub`: the name of each subscript or element of the vector.
+///              Note that the number of `$sub`s should be the same as the
+///              length of the vector.
+///
+/// # Example
+///   Consider the definition of `Vector3`:
+///
+///   ```
+///   make_vector! { Vector3, length: 3, x, y, z }
+///   ```
 #[macro_export]
 macro_rules! make_vector {
-    ($name: ident, $len:expr, $($sub: ident),+) => {
+    ($name: ident, $dim:expr, $($sub: ident),+) => {
         #[cfg(not(simd))]
         #[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Debug, Default)]
         #[repr(C)]
@@ -18,7 +47,7 @@ macro_rules! make_vector {
         impl_rand! { $name, $($sub),+ }
 
         impl_ops! { $name, $($sub),+ }
-        impl_converts! { $name, $len }
+        impl_converts! { $name, $dim }
         impl_index! { $name }
 
     }
