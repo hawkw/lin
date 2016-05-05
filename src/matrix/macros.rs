@@ -1,5 +1,27 @@
 macro_rules! e { ($e:expr) => { $e } }
 
+/// Macro for constructing a new matrix type.
+///
+/// This can be used to construct fixed-sized matrices of whatever dimension
+/// the user would like. While this crate only provides matrices of dimensons
+/// 2 through 5, it's trivial to make matrices of arbitrary length using this
+/// macro.
+///
+/// Another potential use of this macro is to create new matrices whose
+/// subscripts have different names than those provided in this crate. The
+/// matrices in `lin`  have subscripts where the rows are named _x_`n` and the
+/// columns _y_`n` (as in Cartesian coördinates), but in some use cases, they
+/// might represent different quantities. Thus, users can use this macro to
+/// create new matrix types whose subscripts have names with semantic meanings
+/// more appropriate to their individual use case.
+///
+/// # Arguments
+///    - `$name`: The name of the new matrix type
+///    - `$rows`: The number of rows in this matrix
+///    - `$cols`: The number of columns in this matrix
+///    - `$sub`: The name of each subscript or element of the matrix
+///              Note that the number of `$sub`s should be equal to `$cols` *  ///              `$rows`.
+///
 #[macro_export]
 macro_rules! make_matrix {
     ($name: ident, rows: $rows:expr, cols: $cols:expr, $($sub: ident),+) => {
