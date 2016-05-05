@@ -19,7 +19,7 @@ macro_rules! sum {
 /// coördinates), _w_, and _a_; but in some applications, these subscripts
 /// might represent different quantities. Thus, users can use this macro to
 /// create new vector types whose subscripts have names with semantic meanings
-/// more appropriate to their individual use case. 
+/// more appropriate to their individual use case.
 ///
 /// # Arguments
 ///    - `$name`: The name of the new vector type
@@ -31,7 +31,7 @@ macro_rules! sum {
 /// # Example
 ///   Consider the definition of `Vector3`:
 ///
-///   ```
+///   ```ignore
 ///   make_vector! { Vector3, length: 3, x, y, z }
 ///   ```
 #[macro_export]
